@@ -1,42 +1,21 @@
 // routes/post.js
 const express = require('express');
 const router = express.Router();
-const { Post, User } = require('../models');
+const postController = require('../controllers/postController'); // Import the postController
 
 // Create a new post
-router.post('/', async (req, res) => {
-    const { title, content } = req.body;
-    const newPost = await Post.create({
-        title,
-        content,
-        userId: req.session.userId, // Associate with logged-in user
-    });
-    res.redirect('/posts'); // Redirect to posts/dashboard
-});
+router.post('/', postController.createPost); // Use the createPost function from the controller
 
 // Get all posts
-router.get('/', async (req, res) => {
-    const posts = await Post.findAll({ include: User });
-    res.render('dashboard', { posts });
-});
+router.get('/', postController.getAllPosts); // Use the getAllPosts function from the controller
 
 // Get a single post
-router.get('/:id', async (req, res) => {
-    const post = await Post.findByPk(req.params.id, { include: User });
-    res.render('post', { post });
-});
+router.get('/:id', postController.getPostById); // Use the getPostById function from the controller
 
 // Update a post
-router.put('/:id', async (req, res) => {
-    const { title, content } = req.body;
-    await Post.update({ title, content }, { where: { id: req.params.id } });
-    res.redirect('/posts'); // Redirect to posts/dashboard
-});
+router.put('/:id', postController.updatePost); // Use the updatePost function from the controller
 
 // Delete a post
-router.delete('/:id', async (req, res) => {
-    await Post.destroy({ where: { id: req.params.id } });
-    res.redirect('/posts'); // Redirect to posts/dashboard
-});
+router.delete('/:id', postController.deletePost); // Use the deletePost function from the controller
 
 module.exports = router;

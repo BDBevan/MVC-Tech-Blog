@@ -1,48 +1,15 @@
 // routes/auth.js
 const express = require('express');
 const router = express.Router();
-const { User } = require('../models');
-const bcrypt = require('bcrypt');
+const authController = require('../controllers/authController'); // Import the authController
 
 // Sign up route
-router.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    try {
-        const newUser = await User.create({
-            username,
-            password: hashedPassword,
-        });
-        req.session.userId = newUser.id; // Log the user in
-        res.redirect('/posts'); // Redirect to posts/dashboard
-    } catch (err) {
-        res.status(500).json(err);
-    }
-});
+router.post('/signup', authController.signup); // Use the signup function from the controller
 
 // Log in route
-router.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({ where: { username } });
-
-    if (user && await bcrypt.compare(password, user.password)) {
-        req.session.userId = user.id; // Log the user in
-        res.redirect('/posts'); // Redirect to posts/dashboard
-    } else {
-        res.status(401).send('Invalid credentials');
-    }
-});
+router.post('/login', authController.login); // Use the login function from the controller
 
 // Log out route
-router.post('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            return res.status(500).json(err);
-        }
-        res.redirect('/auth'); // Redirect to login page or homepage
-    });
-});
+router.post('/logout', authController.logout); // Use the logout function from the controller
 
 module.exports = router;
-
