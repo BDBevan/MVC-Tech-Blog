@@ -1,7 +1,5 @@
-{{#extend 'layouts/main'}}
-{{#set 'title'}}Sign Up{{/set}}
-
-<h1>Sign Up</h1>
+{{!-- This will use the main layout automatically --}}
+<h1>Create an Account</h1>
 <form action="/auth/signup" method="POST">
     <input type="text" name="username" placeholder="Username" required>
     <input type="password" name="password" placeholder="Password" required>
@@ -9,5 +7,3 @@
 </form>
 
 <p>Already have an account? <a href="/auth/login">Log in here</a>.</p>
-
-{{/extend}}

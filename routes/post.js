@@ -3,6 +3,11 @@ const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/postController'); // Import the postController
 
+// Render the form to create a new post
+router.get('/new', (req, res) => {
+    res.render('newPost'); // Render the new post view (newPost.handlebars)
+});
+
 // Create a new post
 router.post('/', postController.createPost); // Use the createPost function from the controller
 

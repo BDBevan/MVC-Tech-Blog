@@ -1,27 +1,31 @@
 const express = require('express');
 const session = require('express-session');
-const { SequelizeStore } = require('connect-session-sequelize')(session.Store);
+const SequelizeStore = require('connect-session-sequelize')(session.Store); // Update import here
 const exphbs = require('express-handlebars');
+const routes = require('./routes'); // Import your routes
+const { sequelize } = require('./models'); // Import the sequelize instance from your models
 const app = express();
+const methodOverride = require('method-override');
 const PORT = process.env.PORT || 3000;
 
 // Handlebars setup
-app.engine('handlebars', exphbs());
+const hbs = exphbs.create({ /* config options */ });
+app.engine('handlebars', hbs.engine); // Initialize Handlebars engine
 app.set('view engine', 'handlebars');
 
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static('public')); // Serve static files from the public directory
+app.use(methodOverride('_method'));
 
 // Session setup
-const sequelize = new Sequelize(/* Your database credentials */);
 const sessionStore = new SequelizeStore({
-  db: sequelize,
+  db: sequelize, // Use the sequelize instance for session storage
 });
 
 app.use(session({
-  secret: 'your secret',
+  secret: 'happy', // Replace with your secret
   store: sessionStore,
   resave: false,
   saveUninitialized: true,
@@ -34,4 +38,6 @@ app.use(routes);
 // Sync sequelize and start the server
 sequelize.sync().then(() => {
   app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
+}).catch((error) => {
+  console.error('Unable to connect to the database:', error);
 });

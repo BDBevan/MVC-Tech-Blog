@@ -19,22 +19,34 @@ const createPost = async (req, res) => {
 // Get all posts
 const getAllPosts = async (req, res) => {
     try {
-        const posts = await Post.findAll({ include: User });
-        res.render('dashboard', { posts });
+        const posts = await Post.findAll({
+            include: User,
+        });
+
+        // Convert posts to plain JavaScript objects
+        const plainPosts = posts.map(post => post.get({ plain: true }));
+
+        // Debugging code: Log the plain posts to the console
+        console.log('Plain posts:', plainPosts);
+
+        res.render('dashboard', { posts: plainPosts }); // Pass the plain objects to Handlebars
     } catch (err) {
+        console.error(err);
         res.status(500).json(err);
     }
 };
-
 // Get a single post
 const getPostById = async (req, res) => {
     try {
-        const post = await Post.findByPk(req.params.id, { include: User });
+        const post = await Post.findByPk(req.params.id, {
+            include: [User, { model: Comment }] // Include User and Comments
+        });
         if (!post) {
             return res.status(404).send('Post not found');
         }
         res.render('post', { post });
     } catch (err) {
+        console.error(err); // Log the error for debugging
         res.status(500).json(err);
     }
 };
