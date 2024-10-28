@@ -1,26 +1,26 @@
 // routes/post.js
 const express = require('express');
 const router = express.Router();
-const postController = require('../controllers/postController'); // Import the postController
+const postController = require('../controllers/postController');
 
 // Render the form to create a new post
 router.get('/new', (req, res) => {
-    res.render('newPost'); // Render the new post view (newPost.handlebars)
+    res.render('newPost');
 });
 
 // Create a new post
-router.post('/', postController.createPost); // Use the createPost function from the controller
+router.post('/', postController.createPost);
 
 // Get all posts
-router.get('/', postController.getAllPosts); // Use the getAllPosts function from the controller
+router.get('/', postController.getAllPosts);
 
 // Get a single post
-router.get('/:id', postController.getPostById); // Use the getPostById function from the controller
+router.get('/:id', postController.getPostById);
 
 // Update a post
-router.put('/:id', postController.updatePost); // Use the updatePost function from the controller
+router.put('/:id', postController.updatePost);
 
 // Delete a post
-router.delete('/:id', postController.deletePost); // Use the deletePost function from the controller
+router.delete('/:id', postController.deletePost);
 
 module.exports = router;

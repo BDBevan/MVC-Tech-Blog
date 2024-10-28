@@ -1,12 +1,15 @@
+// Load environment variables from .env file
+require('dotenv').config();
+
 const express = require('express');
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store); // Update import here
 const exphbs = require('express-handlebars');
+const methodOverride = require('method-override');
 const routes = require('./routes'); // Import your routes
 const { sequelize } = require('./models'); // Import the sequelize instance from your models
 const app = express();
-const methodOverride = require('method-override');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 // Handlebars setup
 const hbs = exphbs.create({ /* config options */ });
@@ -16,21 +19,27 @@ app.set('view engine', 'handlebars');
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public')); // Serve static files from the public directory
+app.use(express.static('public')); 
 app.use(methodOverride('_method'));
 
 // Session setup
 const sessionStore = new SequelizeStore({
-  db: sequelize, // Use the sequelize instance for session storage
+  db: sequelize,
 });
 
 app.use(session({
-  secret: 'happy', // Replace with your secret
+  secret: process.env.SESSION_SECRET,
   store: sessionStore,
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 30 * 60 * 1000 } // Set cookie expiration time
+  cookie: { maxAge: 30 * 60 * 1000 } 
 }));
+
+// Pass session data to all views
+app.use((req, res, next) => {
+  res.locals.session = req.session; 
+  next();
+});
 
 // Use routes
 app.use(routes);

@@ -4,7 +4,7 @@
 
 <h2>Comments:</h2>
 <ul id="comments">
-    {{#if post.Comments.length}} <!-- Check if there are comments -->
+    {{#if post.Comments.length}}
         {{#each post.Comments}}
             <li>
                 <strong>{{this.username}}</strong> ({{this.createdAt}}): {{this.content}}

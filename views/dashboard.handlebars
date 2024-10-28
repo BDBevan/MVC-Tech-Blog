@@ -8,8 +8,8 @@
     <ul>
         {{#each posts}}
             <li>
-                <a href="/posts/{{this.id}}">{{this.title}}</a> <!-- Ensure title is displayed -->
-                <p>{{this.content}}</p> <!-- Display content if necessary -->
+                <a href="/posts/{{this.id}}">{{this.title}}</a>
+                <p>{{this.content}}</p>
                 <form action="/posts/{{this.id}}?_method=DELETE" method="POST">
                     <button type="submit">Delete</button>
                 </form>

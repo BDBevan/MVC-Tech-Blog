@@ -34,13 +34,18 @@ const login = async (req, res) => {
 
 // Log out function
 const logout = (req, res) => {
+    // Destroy the session
     req.session.destroy(err => {
-        if (err) {
-            return res.status(500).json(err);
-        }
-        res.redirect('/auth'); // Redirect to login page or homepage
+      if (err) {
+        console.error('Failed to destroy session:', err);
+        return res.status(500).json({ error: 'Failed to log out.' });
+      }
+      // Clear the cookie if needed
+      res.clearCookie('connect.sid'); // Replace 'connect.sid' with your session cookie name if different
+      res.redirect('/auth/login'); // Redirect to login or home page
     });
-};
+  };
+  
 
 module.exports = {
     signup,
